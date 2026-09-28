@@ -1,0 +1,30 @@
+package com.ridelink.ride_service.model;
+
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Document(collection = "rides")
+public class Ride {
+    @Id
+    private String id;
+    private String passengerId;
+    private String driverId;
+    private String pickupLocation;
+    private String dropoffLocation;
+
+    // Statuses: REQUESTED, DRIVER_ASSIGNED, IN_PROGRESS, COMPLETED, CANCELLED
+    private String status;
+
+    private Double fare;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
