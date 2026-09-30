@@ -1,0 +1,671 @@
+{
+  "info": {
+    "name": "RideLink - Driver & Vehicle Service",
+    "description": "Postman collection for Driver & Vehicle Service API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3002",
+      "type": "string"
+    },
+    {
+      "key": "jwtToken",
+      "value": "",
+      "type": "string",
+      "description": "JWT token for authentication"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Generate JWT Token (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "token"]
+            },
+            "description": "Generate JWT token for admin user (Note: This endpoint should be implemented in Account Service)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Driver Endpoints",
+      "item": [
+        {
+          "name": "Create Driver Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"507f1f77bcf86cd799439011\",\n  \"licenseNumber\": \"DL12345\",\n  \"licenseExpiryDate\": \"2026-12-31T00:00:00\",\n  \"serviceArea\": \"Colombo\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "profile"]
+            },
+            "description": "Create a new driver profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Driver by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/profile/{{driverId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "profile", "{{driverId}}"],
+              "variable": [
+                {
+                  "key": "driverId",
+                  "value": "driver123",
+                  "description": "Driver ID"
+                }
+              ]
+            },
+            "description": "Retrieve driver profile by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Driver by User ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "user", "{{userId}}"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "507f1f77bcf86cd799439011",
+                  "description": "User ID"
+                }
+              ]
+            },
+            "description": "Retrieve driver profile by user ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Driver Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"licenseNumber\": \"DL54321\",\n  \"licenseExpiryDate\": \"2027-12-31T00:00:00\",\n  \"serviceArea\": \"Kandy\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/profile/{{driverId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "profile", "{{driverId}}"],
+              "variable": [
+                {
+                  "key": "driverId",
+                  "value": "driver123",
+                  "description": "Driver ID"
+                }
+              ]
+            },
+            "description": "Update driver profile information"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Availability",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/availability/{{driverId}}?isAvailable=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "availability", "{{driverId}}"],
+              "query": [
+                {
+                  "key": "isAvailable",
+                  "value": "true",
+                  "description": "Availability status"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "driverId",
+                  "value": "driver123",
+                  "description": "Driver ID"
+                }
+              ]
+            },
+            "description": "Update driver availability status"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Location",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"coordinates\": [79.8657, 6.9271],\n  \"locationName\": \"Colombo City Center\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/location/{{driverId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "location", "{{driverId}}"],
+              "variable": [
+                {
+                  "key": "driverId",
+                  "value": "driver123",
+                  "description": "Driver ID"
+                }
+              ]
+            },
+            "description": "Update driver current location"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Available Drivers",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[79.8657, 6.9271]"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/available?serviceArea=Colombo&maxDistance=5000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "available"],
+              "query": [
+                {
+                  "key": "serviceArea",
+                  "value": "Colombo",
+                  "description": "Service area"
+                },
+                {
+                  "key": "maxDistance",
+                  "value": "5000",
+                  "description": "Maximum distance in meters"
+                }
+              ]
+            },
+            "description": "Retrieve available drivers in service area"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Driver Rating",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/rating/{{driverId}}?rating=4.5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "rating", "{{driverId}}"],
+              "query": [
+                {
+                  "key": "rating",
+                  "value": "4.5",
+                  "description": "Rating (1-5)"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "driverId",
+                  "value": "driver123",
+                  "description": "Driver ID"
+                }
+              ]
+            },
+            "description": "Update driver rating after ride completion"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Vehicle Endpoints",
+      "item": [
+        {
+          "name": "Register Vehicle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"driverId\": \"driver123\",\n  \"make\": \"Toyota\",\n  \"model\": \"Corolla\",\n  \"year\": 2020,\n  \"licensePlate\": \"ABC-1234\",\n  \"color\": \"White\",\n  \"vehicleType\": \"sedan\",\n  \"capacity\": 4,\n  \"registrationExpiryDate\": \"2026-12-31T00:00:00\",\n  \"insuranceExpiryDate\": \"2026-12-31T00:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "register"]
+            },
+            "description": "Register a new vehicle for a driver"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vehicle by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "{{vehicleId}}"],
+              "variable": [
+                {
+                  "key": "vehicleId",
+                  "value": "vehicle123",
+                  "description": "Vehicle ID"
+                }
+              ]
+            },
+            "description": "Retrieve vehicle by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vehicle by Driver ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/driver/{{driverId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "driver", "{{driverId}}"],
+              "variable": [
+                {
+                  "key": "driverId",
+                  "value": "driver123",
+                  "description": "Driver ID"
+                }
+              ]
+            },
+            "description": "Retrieve vehicle by driver ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Vehicle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"color\": \"Blue\",\n  \"capacity\": 5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "{{vehicleId}}"],
+              "variable": [
+                {
+                  "key": "vehicleId",
+                  "value": "vehicle123",
+                  "description": "Vehicle ID"
+                }
+              ]
+            },
+            "description": "Update vehicle details"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Vehicle Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}/status?status=inactive",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "{{vehicleId}}", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "inactive",
+                  "description": "Vehicle status (active/inactive/maintenance)"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "vehicleId",
+                  "value": "vehicle123",
+                  "description": "Vehicle ID"
+                }
+              ]
+            },
+            "description": "Update vehicle status"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Vehicle",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "{{vehicleId}}"],
+              "variable": [
+                {
+                  "key": "vehicleId",
+                  "value": "vehicle123",
+                  "description": "Vehicle ID"
+                }
+              ]
+            },
+            "description": "Delete a vehicle"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Negative Test Scenarios",
+      "item": [
+        {
+          "name": "Create Driver - Invalid User ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"\",\n  \"licenseNumber\": \"DL12345\",\n  \"licenseExpiryDate\": \"2026-12-31T00:00:00\",\n  \"serviceArea\": \"Colombo\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "profile"]
+            },
+            "description": "Test validation error - empty user ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Driver - Duplicate License",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"507f1f77bcf86cd799439012\",\n  \"licenseNumber\": \"DL12345\",\n  \"licenseExpiryDate\": \"2026-12-31T00:00:00\",\n  \"serviceArea\": \"Colombo\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "profile"]
+            },
+            "description": "Test business rule - duplicate license number"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Availability - No Active Vehicle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/availability/{{driverId}}?isAvailable=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "availability", "{{driverId}}"],
+              "query": [
+                {
+                  "key": "isAvailable",
+                  "value": "true"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "driverId",
+                  "value": "driver123"
+                }
+              ]
+            },
+            "description": "Test business rule - driver without active vehicle cannot be available"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Rating - Invalid Rating",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/rating/{{driverId}}?rating=6.0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "rating", "{{driverId}}"],
+              "query": [
+                {
+                  "key": "rating",
+                  "value": "6.0"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "driverId",
+                  "value": "driver123"
+                }
+              ]
+            },
+            "description": "Test validation error - rating out of range (1-5)"
+          },
+          "response": []
+        },
+        {
+          "name": "Register Vehicle - Invalid Driver ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"driverId\": \"\",\n  \"make\": \"Toyota\",\n  \"model\": \"Corolla\",\n  \"year\": 2020,\n  \"licensePlate\": \"ABC-1234\",\n  \"color\": \"White\",\n  \"vehicleType\": \"sedan\",\n  \"capacity\": 4,\n  \"registrationExpiryDate\": \"2026-12-31T00:00:00\",\n  \"insuranceExpiryDate\": \"2026-12-31T00:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "register"]
+            },
+            "description": "Test validation error - empty driver ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Request Without Authentication",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/drivers/profile/{{driverId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "drivers", "profile", "{{driverId}}"],
+              "variable": [
+                {
+                  "key": "driverId",
+                  "value": "driver123"
+                }
+              ]
+            },
+            "description": "Test security - request without JWT token"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
