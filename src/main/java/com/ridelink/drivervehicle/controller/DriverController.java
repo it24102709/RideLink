@@ -75,10 +75,9 @@ public class DriverController {
         return response.isSuccess() ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
     
-    // In DriverController.java
-@PostMapping("/available")
-@Operation(summary = "Get available drivers", description = "Retrieve available drivers in service area")
-public ResponseEntity<ApiResponse<List<Driver>>> getAvailableDrivers(
+    @PostMapping("/available")
+    @Operation(summary = "Get available drivers", description = "Retrieve available drivers in service area")
+    public ResponseEntity<ApiResponse<List<Driver>>> getAvailableDrivers(
         @RequestParam String serviceArea,
         @RequestParam(defaultValue = "5000") double maxDistance,
         @RequestBody double[] coordinates) {
