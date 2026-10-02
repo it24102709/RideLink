@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class VehicleService {
     private final DriverRepository driverRepository;
     
     public ApiResponse<Vehicle> registerVehicle(VehicleRequest request) {
-        Driver driver = driverRepository.findById(request.getDriverId()).orElse(null);
+        Driver driver = driverRepository.findByUserId(request.getDriverId()).orElse(null);
         if (driver == null) {
             return ApiResponse.error("Driver profile not found");
         }
@@ -65,6 +66,11 @@ public class VehicleService {
         return vehicleRepository.findByDriverId(driverId)
             .map(vehicle -> ApiResponse.success("Vehicle retrieved", vehicle))
             .orElseGet(() -> ApiResponse.error("Vehicle not found for this driver"));
+    }
+    
+    public ApiResponse<List<Vehicle>> getAllVehicles() {
+        List<Vehicle> vehicles = vehicleRepository.findAll();
+        return ApiResponse.success("All vehicles retrieved", vehicles);
     }
     
     public ApiResponse<Vehicle> updateVehicle(String id, VehicleRequest request) {
