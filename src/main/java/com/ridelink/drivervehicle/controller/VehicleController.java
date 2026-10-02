@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/vehicles")
 @RequiredArgsConstructor
@@ -40,6 +42,13 @@ public class VehicleController {
     public ResponseEntity<ApiResponse<Vehicle>> getVehicleByDriverId(@PathVariable String driverId) {
         ApiResponse<Vehicle> response = vehicleService.getVehicleByDriverId(driverId);
         return response.isSuccess() ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
+    }
+    
+    @GetMapping
+    @Operation(summary = "Get all vehicles", description = "Retrieve all vehicles")
+    public ResponseEntity<ApiResponse<List<Vehicle>>> getAllVehicles() {
+        ApiResponse<List<Vehicle>> response = vehicleService.getAllVehicles();
+        return ResponseEntity.ok(response);
     }
     
     @PutMapping("/{id}")
