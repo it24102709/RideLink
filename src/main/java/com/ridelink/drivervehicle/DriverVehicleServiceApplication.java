@@ -10,3 +10,4 @@ public class DriverVehicleServiceApplication {
         SpringApplication.run(DriverVehicleServiceApplication.class, args);
     }
 }
+ 
