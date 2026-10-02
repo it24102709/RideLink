@@ -91,7 +91,7 @@ public class DriverService {
         return driverRepository.findById(id)
             .map(driver -> {
                 if (isAvailable) {
-                    Vehicle vehicle = vehicleRepository.findByDriverId(id).orElse(null);
+                    Vehicle vehicle = vehicleRepository.findByDriverId(driver.getUserId()).orElse(null);
                     if (vehicle == null || !"active".equals(vehicle.getStatus())) {
                         return ApiResponse.<Driver>error("Driver must have an active vehicle to be available");
                     }
