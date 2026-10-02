@@ -64,6 +64,11 @@ public class DriverService {
             .orElseGet(() -> ApiResponse.error("Driver profile not found"));
     }
     
+    public ApiResponse<List<Driver>> getAllDrivers() {
+        List<Driver> drivers = driverRepository.findAll();
+        return ApiResponse.success("All drivers retrieved", drivers);
+    }
+    
     public ApiResponse<Driver> updateDriverProfile(String id, DriverRequest request) {
         return driverRepository.findById(id)
             .map(driver -> {
