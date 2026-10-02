@@ -44,6 +44,13 @@ public class DriverController {
         return response.isSuccess() ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
     
+    @GetMapping
+    @Operation(summary = "Get all drivers", description = "Retrieve all driver profiles")
+    public ResponseEntity<ApiResponse<List<Driver>>> getAllDrivers() {
+        ApiResponse<List<Driver>> response = driverService.getAllDrivers();
+        return ResponseEntity.ok(response);
+    }
+    
     @PutMapping("/profile/{id}")
     @Operation(summary = "Update driver profile", description = "Update driver profile information")
     public ResponseEntity<ApiResponse<Driver>> updateDriverProfile(@PathVariable String id, @RequestBody DriverRequest request) {
@@ -68,15 +75,22 @@ public class DriverController {
         return response.isSuccess() ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
     
-    @PostMapping("/available")
-    @Operation(summary = "Get available drivers", description = "Retrieve available drivers in service area")
-    public ResponseEntity<ApiResponse<List<Driver>>> getAvailableDrivers(
-            @RequestParam String serviceArea,
-            @RequestParam(defaultValue = "5000") double maxDistance,
-            @RequestBody double[] coordinates) {
-        ApiResponse<List<Driver>> response = driverService.getAvailableDrivers(serviceArea, coordinates, maxDistance);
-        return ResponseEntity.ok(response);
+    // In DriverController.java
+@PostMapping("/available")
+@Operation(summary = "Get available drivers", description = "Retrieve available drivers in service area")
+public ResponseEntity<ApiResponse<List<Driver>>> getAvailableDrivers(
+        @RequestParam String serviceArea,
+        @RequestParam(defaultValue = "5000") double maxDistance,
+        @RequestBody double[] coordinates) {
+    
+    // Ensure coordinates array has [longitude, latitude]
+    if (coordinates == null || coordinates.length < 2) {
+        return ResponseEntity.badRequest().body(ApiResponse.error("Coordinates must contain [longitude, latitude]"));
     }
+    
+    ApiResponse<List<Driver>> response = driverService.getAvailableDrivers(serviceArea, coordinates, maxDistance);
+    return ResponseEntity.ok(response);
+}
     
     @PutMapping("/rating/{id}")
     @Operation(summary = "Update driver rating", description = "Update driver rating after ride completion")
