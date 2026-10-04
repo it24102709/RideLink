@@ -20,7 +20,7 @@ public class VehicleService {
     private final DriverRepository driverRepository;
     
     public ApiResponse<Vehicle> registerVehicle(VehicleRequest request) {
-        Driver driver = driverRepository.findByUserId(request.getDriverId()).orElse(null);
+        Driver driver = driverRepository.findById(request.getDriverId()).orElse(null);
         if (driver == null) {
             return ApiResponse.error("Driver profile not found");
         }
