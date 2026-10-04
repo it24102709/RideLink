@@ -71,7 +71,7 @@ class VehicleServiceTest {
 
     @Test
     void registerVehicle_Success() {
-        when(driverRepository.findById(anyString())).thenReturn(Optional.of(driver));
+        when(driverRepository.findByUserId(anyString())).thenReturn(Optional.of(driver));
         when(vehicleRepository.findByDriverId(anyString())).thenReturn(Optional.empty());
         when(vehicleRepository.findByLicensePlate(anyString())).thenReturn(Optional.empty());
         when(vehicleRepository.save(any(Vehicle.class))).thenReturn(vehicle);
@@ -88,7 +88,7 @@ class VehicleServiceTest {
 
     @Test
     void registerVehicle_DriverNotFound() {
-        when(driverRepository.findById(anyString())).thenReturn(Optional.empty());
+        when(driverRepository.findByUserId(anyString())).thenReturn(Optional.empty());
 
         ApiResponse<Vehicle> response = vehicleService.registerVehicle(vehicleRequest);
 
@@ -99,7 +99,7 @@ class VehicleServiceTest {
 
     @Test
     void registerVehicle_VehicleAlreadyExists() {
-        when(driverRepository.findById(anyString())).thenReturn(Optional.of(driver));
+        when(driverRepository.findByUserId(anyString())).thenReturn(Optional.of(driver));
         when(vehicleRepository.findByDriverId(anyString())).thenReturn(Optional.of(vehicle));
 
         ApiResponse<Vehicle> response = vehicleService.registerVehicle(vehicleRequest);
@@ -111,7 +111,7 @@ class VehicleServiceTest {
 
     @Test
     void registerVehicle_LicensePlateAlreadyExists() {
-        when(driverRepository.findById(anyString())).thenReturn(Optional.of(driver));
+        when(driverRepository.findByUserId(anyString())).thenReturn(Optional.of(driver));
         when(vehicleRepository.findByDriverId(anyString())).thenReturn(Optional.empty());
         when(vehicleRepository.findByLicensePlate(anyString())).thenReturn(Optional.of(vehicle));
 
