@@ -20,13 +20,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .csrf(csrf -> csrf.disable())
+        .cors(cors -> cors.disable())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
             // Public endpoints
             .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/health", "/api/health").permitAll()
+            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/error").permitAll()
             
-            // Allow all requests for testing
-            .anyRequest().permitAll()
+            // All other endpoints require authentication
+            .anyRequest().authenticated()
         )
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     
