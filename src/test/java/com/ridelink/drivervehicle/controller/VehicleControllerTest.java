@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ridelink.drivervehicle.dto.ApiResponse;
 import com.ridelink.drivervehicle.dto.VehicleRequest;
 import com.ridelink.drivervehicle.model.Vehicle;
+import com.ridelink.drivervehicle.security.JwtUtil;
 import com.ridelink.drivervehicle.service.VehicleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,11 +34,17 @@ class VehicleControllerTest {
     @MockBean
     private VehicleService vehicleService;
 
+    @MockBean
+    private JwtUtil jwtUtil;
+
     private VehicleRequest vehicleRequest;
     private Vehicle vehicle;
+    private String validToken;
 
     @BeforeEach
     void setUp() {
+        validToken = "Bearer valid.jwt.token";
+        
         vehicleRequest = new VehicleRequest();
         vehicleRequest.setDriverId("driver123");
         vehicleRequest.setMake("Toyota");
@@ -61,6 +68,9 @@ class VehicleControllerTest {
         vehicle.setVehicleType("sedan");
         vehicle.setCapacity(4);
         vehicle.setStatus("active");
+        
+        when(jwtUtil.validateToken(anyString())).thenReturn(true);
+        when(jwtUtil.extractUserId(anyString())).thenReturn("driver123");
     }
 
     @Test
@@ -70,6 +80,7 @@ class VehicleControllerTest {
 
         mockMvc.perform(post("/api/vehicles/register")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", validToken)
                         .content(objectMapper.writeValueAsString(vehicleRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success").value(true))
@@ -82,6 +93,7 @@ class VehicleControllerTest {
 
         mockMvc.perform(post("/api/vehicles/register")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", validToken)
                         .content(objectMapper.writeValueAsString(vehicleRequest)))
                 .andExpect(status().isBadRequest());
     }
@@ -91,7 +103,8 @@ class VehicleControllerTest {
         when(vehicleService.getVehicleById(anyString()))
                 .thenReturn(ApiResponse.success("Vehicle retrieved", vehicle));
 
-        mockMvc.perform(get("/api/vehicles/vehicle123"))
+        mockMvc.perform(get("/api/vehicles/vehicle123")
+                        .header("Authorization", validToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Vehicle retrieved"));
@@ -102,7 +115,8 @@ class VehicleControllerTest {
         when(vehicleService.getVehicleById(anyString()))
                 .thenReturn(ApiResponse.error("Vehicle not found"));
 
-        mockMvc.perform(get("/api/vehicles/nonexistent"))
+        mockMvc.perform(get("/api/vehicles/nonexistent")
+                        .header("Authorization", validToken))
                 .andExpect(status().isNotFound());
     }
 
@@ -111,7 +125,8 @@ class VehicleControllerTest {
         when(vehicleService.getVehicleByDriverId(anyString()))
                 .thenReturn(ApiResponse.success("Vehicle retrieved", vehicle));
 
-        mockMvc.perform(get("/api/vehicles/driver/driver123"))
+        mockMvc.perform(get("/api/vehicles/driver/driver123")
+                        .header("Authorization", validToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
     }
@@ -123,6 +138,7 @@ class VehicleControllerTest {
 
         mockMvc.perform(put("/api/vehicles/vehicle123")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", validToken)
                         .content(objectMapper.writeValueAsString(vehicleRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
@@ -133,7 +149,8 @@ class VehicleControllerTest {
         when(vehicleService.updateVehicleStatus(anyString(), anyString()))
                 .thenReturn(ApiResponse.success("Vehicle status updated successfully", vehicle));
 
-        mockMvc.perform(put("/api/vehicles/vehicle123/status?status=inactive"))
+        mockMvc.perform(put("/api/vehicles/vehicle123/status?status=inactive")
+                        .header("Authorization", validToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
     }
@@ -143,7 +160,8 @@ class VehicleControllerTest {
         when(vehicleService.deleteVehicle(anyString()))
                 .thenReturn(ApiResponse.success("Vehicle deleted successfully", null));
 
-        mockMvc.perform(delete("/api/vehicles/vehicle123"))
+        mockMvc.perform(delete("/api/vehicles/vehicle123")
+                        .header("Authorization", validToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Vehicle deleted successfully"));
@@ -154,7 +172,8 @@ class VehicleControllerTest {
         when(vehicleService.deleteVehicle(anyString()))
                 .thenReturn(ApiResponse.error("Vehicle not found"));
 
-        mockMvc.perform(delete("/api/vehicles/nonexistent"))
+        mockMvc.perform(delete("/api/vehicles/nonexistent")
+                        .header("Authorization", validToken))
                 .andExpect(status().isNotFound());
     }
 }
