@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ridelink.drivervehicle.dto.ApiResponse;
 import com.ridelink.drivervehicle.dto.DriverRequest;
 import com.ridelink.drivervehicle.model.Driver;
+import com.ridelink.drivervehicle.security.JwtUtil;
 import com.ridelink.drivervehicle.service.DriverService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,11 +36,17 @@ class DriverControllerTest {
     @MockBean
     private DriverService driverService;
 
+    @MockBean
+    private JwtUtil jwtUtil;
+
     private DriverRequest driverRequest;
     private Driver driver;
+    private String validToken;
 
     @BeforeEach
     void setUp() {
+        validToken = "Bearer valid.jwt.token";
+        
         driverRequest = new DriverRequest();
         driverRequest.setUserId("507f1f77bcf86cd799439011");
         driverRequest.setLicenseNumber("DL12345");
@@ -52,6 +59,9 @@ class DriverControllerTest {
         driver.setLicenseNumber("DL12345");
         driver.setLicenseExpiryDate(LocalDateTime.now().plusYears(5));
         driver.setServiceArea("Colombo");
+        
+        when(jwtUtil.validateToken(anyString())).thenReturn(true);
+        when(jwtUtil.extractUserId(anyString())).thenReturn("507f1f77bcf86cd799439011");
     }
 
     @Test
@@ -61,6 +71,7 @@ class DriverControllerTest {
 
         mockMvc.perform(post("/api/drivers/profile")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", validToken)
                         .content(objectMapper.writeValueAsString(driverRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success").value(true))
@@ -73,6 +84,7 @@ class DriverControllerTest {
 
         mockMvc.perform(post("/api/drivers/profile")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", validToken)
                         .content(objectMapper.writeValueAsString(driverRequest)))
                 .andExpect(status().isBadRequest());
     }
@@ -82,7 +94,8 @@ class DriverControllerTest {
         when(driverService.getDriverById(anyString()))
                 .thenReturn(ApiResponse.success("Driver profile retrieved", driver));
 
-        mockMvc.perform(get("/api/drivers/profile/driver123"))
+        mockMvc.perform(get("/api/drivers/profile/driver123")
+                        .header("Authorization", validToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Driver profile retrieved"));
@@ -93,7 +106,8 @@ class DriverControllerTest {
         when(driverService.getDriverById(anyString()))
                 .thenReturn(ApiResponse.error("Driver profile not found"));
 
-        mockMvc.perform(get("/api/drivers/profile/nonexistent"))
+        mockMvc.perform(get("/api/drivers/profile/nonexistent")
+                        .header("Authorization", validToken))
                 .andExpect(status().isNotFound());
     }
 
@@ -102,7 +116,8 @@ class DriverControllerTest {
         when(driverService.getDriverByUserId(anyString()))
                 .thenReturn(ApiResponse.success("Driver profile retrieved", driver));
 
-        mockMvc.perform(get("/api/drivers/user/user123"))
+        mockMvc.perform(get("/api/drivers/user/user123")
+                        .header("Authorization", validToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
     }
@@ -114,6 +129,7 @@ class DriverControllerTest {
 
         mockMvc.perform(put("/api/drivers/profile/driver123")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", validToken)
                         .content(objectMapper.writeValueAsString(driverRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
@@ -125,7 +141,8 @@ class DriverControllerTest {
                 .thenReturn(ApiResponse.success("Availability status updated successfully", driver));
 
         mockMvc.perform(put("/api/drivers/availability/driver123?isAvailable=true")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", validToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
     }
@@ -135,7 +152,8 @@ class DriverControllerTest {
         when(driverService.updateDriverRating(anyString(), anyDouble()))
                 .thenReturn(ApiResponse.success("Rating updated successfully", driver));
 
-        mockMvc.perform(put("/api/drivers/rating/driver123?rating=4.5"))
+        mockMvc.perform(put("/api/drivers/rating/driver123?rating=4.5")
+                        .header("Authorization", validToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
     }
@@ -145,7 +163,8 @@ class DriverControllerTest {
         when(driverService.updateDriverRating(anyString(), anyDouble()))
                 .thenReturn(ApiResponse.error("Rating must be between 1 and 5"));
 
-        mockMvc.perform(put("/api/drivers/rating/driver123?rating=6.0"))
+        mockMvc.perform(put("/api/drivers/rating/driver123?rating=6.0")
+                        .header("Authorization", validToken))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false));
     }
