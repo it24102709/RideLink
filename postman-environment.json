@@ -1,0 +1,33 @@
+{
+  "id": "ridelink-driver-vehicle-env",
+  "name": "RideLink - Driver & Vehicle Service Environment",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3002",
+      "enabled": true
+    },
+    {
+      "key": "jwtToken",
+      "value": "",
+      "enabled": true,
+      "type": "secret"
+    },
+    {
+      "key": "driverId",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "vehicleId",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "userId",
+      "value": "507f1f77bcf86cd799439011",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}
